@@ -11,9 +11,10 @@ paperworkModule.controller('NotesAllController',
      }
      notesService.getNotesInNotebook($rootScope.getNotebookSelectedId(), function() {
        // $rootScope.setNoteSelectedId($rootScope.getNotebookSelectedId(), $rootScope.notes[0].id);
-       if($rootScope.notes.length > 0) {
+       // Don't load note when open notebook
+       /*if($rootScope.notes.length > 0) {
          $location.path("/n/" + $scope.notebookSelectedId + "/" + $rootScope.notes[0].id);
-       }
+       }*/
      });
 
      $rootScope.editMultipleNotes = false;

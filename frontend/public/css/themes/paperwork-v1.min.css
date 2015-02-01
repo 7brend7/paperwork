@@ -8210,6 +8210,17 @@ ul.nav-tabs-margin {
 .tree ul.tree-child li.tree-notebook .notebook-title.active {
   color: #03a9f4;
 }
+.tree ul.tree-child li.tree-notebook .show-popup-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.tree ul.tree-child li.tree-notebook .show-popup-btn .dropdown-toggle {
+  padding: 0px 5px;
+}
+.tree ul.tree-child li.tree-notebook .show-popup-btn .dropdown-menu li {
+  padding: 0;
+}
 .tree ul.tree-child li.tree-tag {
   cursor: pointer;
 }
@@ -8257,7 +8268,7 @@ ul.nav-tabs-margin {
 }
 .tree span.tree-header {
   display: block;
-  padding: 10px;
+  padding: 10px 0 10px 10px;
   margin: 0px 0px 6px 0px;
   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;

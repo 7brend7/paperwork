@@ -20,11 +20,20 @@
 							</ul>
 						</li>
 						<li>
-							<span class="tree-header tree-header-notebooks"><i class="fa fa-chevron-down"></i> [[Lang::get('keywords.notebooks')]]</span>
-							<ul class="tree-child">
+							<span class="tree-header tree-header-notebooks"><i class="fa fa-chevron-down"></i> [[Lang::get('keywords.notebooks')]] <button class="btn btn-default btn-xs pull-right" ng-click="modalNewNotebook();$event.stopPropagation();">[[Lang::get('keywords.new_notebook')]]</button></span>
+                            <ul class="tree-child">
 								<li class="tree-notebook" ng-repeat="notebook in notebooks | orderBy:'title'" ng-cloak>
 									<div class="notebook-title" ng-click="openNotebook(notebook.id, notebook.type, notebook.id)" ng-class="{ 'active': notebook.id == getNotebookSelectedId() }"><i class="fa {{ notebookIconByType(notebook.type) }}"></i> {{notebook.title}}</div>
-									<ul class="tree-child">
+                                    <div ng-hide="{{notebook.id == 0}}" class="btn-group btn-group-sm show-popup-btn pull-right">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="caret"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a ng-click="modalEditNotebook(notebook.id)">[[Lang::get('keywords.edit_notebook')]]</a></li>
+                                            <li><a ng-click="modalDeleteNotebook(notebook.id)">[[Lang::get('keywords.delete_notebook')]]</a></li>
+                                        </ul>
+                                    </div>
+                                    <ul class="tree-child">
 										<li class="tree-notebook" ng-repeat="child in notebook.children | orderBy:'title'">
 											<div class="notebook-title" ng-click="openNotebook(child.id, child.type, child.id)" ng-class="{ 'active': child.id == getNotebookSelectedId() }"><i class="fa {{ notebookIconByType(child.type) }}"></i> {{child.title}}</div>
 										</li>
