@@ -4,6 +4,7 @@ class Notebook extends Eloquent {
 	use SoftDeletingTrait;
 	protected $softDelete = true;
 	protected $table = 'notebooks';
+	protected $fillable = ['title'];
 
 	public function users() {
 		return $this->belongsToMany('User')->withTimestamps();

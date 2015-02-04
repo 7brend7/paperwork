@@ -285,6 +285,20 @@ class UserController extends BaseController {
 		return Redirect::route("user/login");
 	}
 
+	public function import() {
+		if ($this->isPostRequest()) {
+			if(Input::hasFile('enex')) {
+
+				$result = with(new \Paperwork\PaperworkImport)->import(Input::file('enex'));
+
+				if($result) {
+					// return Redirect::
+				}
+			}
+		}
+		return Redirect::route("user/settings");
+	}
+
     public function export() {
 		$file_content = "";
 		$noteNumber = 0;
