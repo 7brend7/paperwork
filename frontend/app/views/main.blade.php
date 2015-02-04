@@ -60,7 +60,7 @@
 					<div class="notes-list-item-checkbox col-sm-1" ng-show="editMultipleNotes">
 						<input name="notes[]" type="checkbox" value="{{ note.id }}" ng-model="notesSelectedIds[note.id]" ng-click="$event.stopPropagation();" ng-dblclick="$event.stopPropagation();">
 					</div>
-					<a class="{{ editMultipleNotes ? 'col-sm-11' : '' }}" href="#{{getNoteLink(note.notebook_id, note.id)}}">
+					<a class="{{ editMultipleNotes ? 'col-sm-11' : '' }}" href="#{{getNoteLink(notebookSelectedId, note.id)}}">
 						<div class="">
 							<span class="notes-list-title notes-list-title-gradient">{{note.title}}</span>
 							<span class="notes-list-date">

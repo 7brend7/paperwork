@@ -68,7 +68,7 @@
 		</div>
 	</div>
 
-	<div class="page-content" ng-bind-html="note.content">
+	<div class="page-content" ng-bind-html="note.content | unsafe">
 	</div>
 </div>
 	@include('partials/file-uploader', array('uploadEnabled' => false, 'actionsEnabled' => false))

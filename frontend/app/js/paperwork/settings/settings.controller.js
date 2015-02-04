@@ -1,4 +1,4 @@
-paperworkModule.controller('SettingsController',
+angular.module('paperworkNotes').controller('SettingsController',
     ['$scope', '$location', '$routeParams', '$http', '$sce',
         function($scope, $location, $routeParams, $http, $sce) {
             $scope.tabs = {
