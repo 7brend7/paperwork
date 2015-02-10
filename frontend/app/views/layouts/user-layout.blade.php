@@ -49,10 +49,6 @@
 
 				@include('partials/search-main')
 
-                <span ng-controller="SidebarNotesController">
-                	<button ng-cloak ng-show="navbarMainMenu" ng-click="newNote(getNotebookSelectedId())" type="button" class="btn btn-default navbar-btn {{ menuItemNotebookClass() }}">[[Lang::get('keywords.new_note')]]</button>
-                </span>
-
 				@include('partials/navigation-main')
 			</div>
 		</div>
