@@ -12,6 +12,7 @@ class PaperworkDbNoteObject extends PaperworkDbObject {
 		$defaultNotesSelect = array('notes.id', 'notes.notebook_id', 'notes.created_at', 'notes.updated_at','notes.version_id');
 		$defaultVersionsSelect = array('versions.id','versions.title', 'versions.content_preview', 'versions.content');
 		$defaultTagsSelect = array('tags.id','tags.visibility', 'tags.title');
+		$defaultNotebooksSelect = array('notebooks.id', 'notebooks.title');
 
 		$userId = $this->getArg($argv, 'userid');
 		$id = $this->getArg($argv, 'id');
@@ -23,6 +24,9 @@ class PaperworkDbNoteObject extends PaperworkDbObject {
 			},
 			'tags' => function($query) use(&$defaultTagsSelect) {
 				$query->select($defaultTagsSelect);
+			},
+			'notebook' => function($query) use(&$defaultNotebooksSelect) {
+				$query->select($defaultNotebooksSelect);
 			}
 		))->join('note_user', function($join) use(&$userId) {
 				$join->on('note_user.note_id', '=', 'notes.id')

@@ -13,7 +13,7 @@ angular.module('paperworkNotes').controller('SidebarManageNotebooksController',
       // Remove 'All Notes' item
       var data = ($.isArray($rootScope.notebooks)) ? $rootScope.notebooks.slice() : [];
       for(var i in data) {
-        if(data[i].id == 0) {
+        if(data[i].id == paperworkDbAllId) {
           data.splice(i, 1);
           break;
         }

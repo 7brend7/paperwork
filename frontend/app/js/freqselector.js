@@ -111,7 +111,8 @@
       wheelDirection: 'horizontal',
       openedCursor: '',
       closedCursor: '',
-      captureWheel: false
+      captureWheel: false,
+      ignoreSizing: true
     });
     this.initializeOverscroll();
     this.initializeItemClick();

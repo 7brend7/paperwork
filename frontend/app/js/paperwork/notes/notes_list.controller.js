@@ -18,4 +18,7 @@ angular.module('paperworkNotes').controller('NotesListController',
       return path;
     };
 
+    $rootScope.notesOrderProp = 'updated_at';
+    $rootScope.notesOrderPropReverse = true;
+
   });

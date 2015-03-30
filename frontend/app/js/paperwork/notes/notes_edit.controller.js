@@ -50,7 +50,7 @@ angular.module('paperworkNotes').controller('NotesEditController',
         // extraPlugins: 'myplugin,anotherplugin',
         // removePlugins: 'sourcearea,save,newpage,preview,print,forms',
         toolbarCanCollapse:     true,
-        toolbarStartupExpanded: false,
+        toolbarStartupExpanded: true,
         tabSpaces:              4,
         skin:                   'bootstrapck',
         height:                 '400px',
@@ -61,12 +61,12 @@ angular.module('paperworkNotes').controller('NotesEditController',
 
       ck.on('change', _onChangeFunction);
 
-      window.onbeforeunloadInfo = $rootScope.i18n.messages.onbeforeunload_info;
+      /*window.onbeforeunloadInfo = $rootScope.i18n.messages.onbeforeunload_info;
       window.onbeforeunload = function() {
         if(window.hasCkeditChangedFunction()) {
           return window.onbeforeunloadInfo;
         }
-      };
+      };*/
     };
 
     var loadedTags = $rootScope.tags;
@@ -85,9 +85,9 @@ angular.module('paperworkNotes').controller('NotesEditController',
       freeInput:       true,
       tagClass:        function(item) {
         if(item[0] == '+') {
-          return "input-tag-public";
+          return "note-tags-item input-tag-public";
         } else {
-          return "input-tag-private";
+          return "note-tags-item input-tag-private";
         }
       },
       typeaheadjs:     {
@@ -158,4 +158,5 @@ angular.module('paperworkNotes').controller('NotesEditController',
     $rootScope.navbarMainMenu = false;
     $rootScope.navbarSearchForm = false;
     $rootScope.expandedNoteLayout = true;
+    $rootScope.editNoteMode = true;
   });

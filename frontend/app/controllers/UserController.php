@@ -173,12 +173,23 @@ class UserController extends BaseController
                 }
 
                 if (!$user->save()) {
-                    return Redirect::back()
-                                   ->withErrors(["password" => [Lang::get('messages.account_update_failed')]]);
+                    //return Redirect::back()->withErrors(["password" => [Lang::get('messages.account_update_failed')]]);
+                    return Response::json(array(
+                        'code'    => 500,
+                        'message' => [Lang::get('messages.account_update_failed')]
+                    ), 500);
                 }
             } else {
-                return Redirect::back()->withInput()->withErrors($validator);
+                //return Redirect::back()->withInput()->withErrors($validator);
+                return Response::json(array(
+                    'code'    => 500,
+                    'message' => $validator->messages()
+                ), 500);
             }
+
+            return Response::json(array(
+                'code'    => 200
+            ));
         }
 
         return View::make("user/profile")->with('user', $user);
@@ -212,11 +223,20 @@ class UserController extends BaseController
                     }
                 }
 
+                $settings->save();
                 Session::put('ui_language', $settings->ui_language);
                 App::setLocale($settings->ui_language);
             } else {
-                return Redirect::back()->withInput()->withErrors($validator);
+                //return Redirect::back()->withInput()->withErrors($validator);
+                return Response::json(array(
+                    'code'    => 500,
+                    'message' => $validator->messages()
+                ), 500);
             }
+
+            return Response::json(array(
+                'code'    => 200
+            ));
         }
 
         $languages             = [];
@@ -359,6 +379,20 @@ class UserController extends BaseController
         Session::flush();
 
         return Redirect::route("user/login");
+    }
+
+    public function import() {
+        if ($this->isPostRequest()) {
+            if(Input::hasFile('enex')) {
+
+                $result = with(new \Paperwork\PaperworkImport)->import(Input::file('enex'));
+
+                if($result) {
+                    // return Redirect::
+                }
+            }
+        }
+        return Redirect::route("user/settings");
     }
 
     public function export()

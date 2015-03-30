@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('SidebarNotesController',
-  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable) {
+  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, $filter) {
     $scope.isVisible = function() {
       return !$rootScope.expandedNoteLayout;
     };
@@ -76,7 +76,7 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       }
     };
 
-    $scope.updateNote = function() {
+    $rootScope.updateNote = function() {
       // if(typeof $rootScope.templateNoteEdit == "undefined" || $rootScope.templateNoteEdit == null) {
       //   $rootScope.templateNoteEdit = {};
       // }
@@ -95,6 +95,8 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
             case 200:
               $rootScope.errors = {};
               $rootScope.templateNoteEdit.modified = false;
+              $rootScope.editNoteMode = false;
+              $location.path("/n/" + $rootScope.notebookSelectedId + "/" + $rootScope.note.id);
               // TODO: Show cool success message
               break;
             case 400:
@@ -244,4 +246,10 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       //u
     };
 
+    $scope.sortNotes = function(item, reverse) {
+      $rootScope.notesOrderProp = item;
+      $rootScope.notesOrderPropReverse = reverse;
+    }
+
+    $rootScope.editNoteMode = false;
   });

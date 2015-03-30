@@ -45,7 +45,10 @@ class LibraryController extends BaseController {
                 $welcomeNoteArray = array('welcomeNoteSaved' => 0);
             }
         }*/
-        return View::make('main');
+        $user = User::find(Auth::user()->id);
+        return View::make('main', [
+            'username' => $user->username
+        ]);
         //return View::make('main', $welcomeNoteArray);
     }
 

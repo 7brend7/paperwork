@@ -139,6 +139,12 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
       $rootScope.modalMessageBox.theCallback(notebookId, noteId, toNotebookId);
     };
 
+    $scope.moveNote = function(notebookId, noteId, toNotebookId) {
+      NotesService.moveNote(notebookId, noteId, toNotebookId, function(_notebookId, _noteId, _toNotebookId) {
+        //$location.path("/n/" + parseInt(_toNotebookId));
+      });
+    };
+
     $scope.modalEditNotebook = function(notebookId) {
       var notebook = NotebooksService.getNotebookByIdLocal(notebookId);
 

@@ -3,7 +3,6 @@ angular.module('paperworkNotes').controller('NotesShowController',
      if($routeParams.noteId === "undefined") {
        return;
      }
-
      $rootScope.notebookSelectedId = ($routeParams.notebookId);
      $rootScope.noteSelectedId = {'notebookId': ($routeParams.notebookId), 'noteId': ($routeParams.noteId)};
      $rootScope.versionSelectedId = {'notebookId': ($routeParams.notebookId), 'noteId': ($routeParams.noteId), 'versionId': paperworkDbAllId};
@@ -33,4 +32,5 @@ angular.module('paperworkNotes').controller('NotesShowController',
     $rootScope.navbarMainMenu = true;
     $rootScope.navbarSearchForm = true;
     $rootScope.expandedNoteLayout = false;
+    $rootScope.editNoteMode = false;
   });
