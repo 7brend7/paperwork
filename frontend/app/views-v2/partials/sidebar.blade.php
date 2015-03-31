@@ -38,8 +38,9 @@
         <div class="title">
             <i class="sprite icon-calendar"></i>
             <b>Calendar</b>
+            <i class="manage-item fa fa-caret-down toggle-calendar-btn" ng-click="toggleCalendarView();"></i>
         </div>
-        <ul class="list-unstyled row">
+        <ul class="list-unstyled row calendar-ul-container">
             <datepicker pw-datepicker-refresh="sidebarCalendarPromise" id="sidebarCalendar" date-disabled="sidebarCalendarIsDisabled(date, mode)" ng-change="openDate(sidebarCalendar)" ng-model="sidebarCalendar" show-weeks="false" ></datepicker>
         </ul>
     </li>

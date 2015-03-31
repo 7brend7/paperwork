@@ -27,11 +27,22 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
     };
 
     $scope.newNote = function(notebookId) {
-      if($rootScope.menuItemNotebookClass() === 'disabled') {
+      /*if($rootScope.menuItemNotebookClass() === 'disabled') {
         return false;
-      }
-      if(typeof notebookId == "undefined" || notebookId == 0) {
-        // TODO: Show some error
+      }*/
+      if(typeof notebookId == "undefined" || notebookId == paperworkDbAllId) {
+        $rootScope.modalMessageBox = {
+          'title': 'Error',
+          'content': 'Please select notebook first',
+          'buttons': [
+            {
+              'label': $rootScope.i18n.keywords.close,
+              'isDismiss': true
+            }
+          ]
+        };
+        $('#modalMessageBox').modal('show');
+        return false;
       }
 
       var data = {

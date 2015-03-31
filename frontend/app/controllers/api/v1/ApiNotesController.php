@@ -272,8 +272,9 @@ class ApiNotesController extends BaseController {
 			return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_NOTFOUND, array());
 		}
 
-		return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $notes->first());
-
+		$note = $notes->first();
+		$note->versions = $this->getNoteVersionsBrief($note->id);
+		return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $note);
 	}
 
 

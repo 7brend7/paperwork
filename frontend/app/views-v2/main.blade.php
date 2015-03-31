@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 border-r set-height" ng-controller="SidebarNotesController">
+        <div id="notesListViewParent" class="col-md-3 border-r set-height" ng-controller="SidebarNotesController">
 
             <div class="sort-by-row row">
                 <div class="col-xs-8">

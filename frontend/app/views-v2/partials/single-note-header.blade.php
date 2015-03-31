@@ -6,7 +6,7 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="selectNotebookDropDown" ng-controller="SidebarNotebooksController">
-            <li ng-repeat="notebook in notebooks | orderBy:'title'">
+            <li ng-repeat="notebook in notebooks | filter:{id:'!00000000-0000-0000-0000-000000000000'} | orderBy:'title'">
                 <a href="#" ng-click="moveNote(note.notebook_id, note.id, notebook.id)">{{notebook.title}}</a>
             </li>
         </ul>
