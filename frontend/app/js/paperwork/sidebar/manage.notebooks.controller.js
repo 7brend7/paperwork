@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('SidebarManageNotebooksController',
-  function($scope, $rootScope, $location, $routeParams, NotebooksService) {
+  function($scope, $rootScope, $location, $routeParams, NotebooksService, paperworkDbAllId) {
     $scope.modalList = [];
 
     $('#modalManageNotebooks').on('hidden.bs.modal', function(e) {

@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('SidebarNotesController',
-  function ($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, $filter) {
+  function ($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, paperworkDbAllId) {
     $scope.isVisible = function () {
       return !$rootScope.expandedNoteLayout;
     };

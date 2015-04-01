@@ -31,7 +31,8 @@ var paths = {
 		'app/js/bower_components/angular-utf8-base64/angular-utf8-base64.js',
 		'app/js/bower_components/angular-ui-bootstrap-bower/ui-bootstrap.js',
 		'app/js/bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-		'app/js/bower_components/ngDraggable/ngDraggable.js'
+		'app/js/bower_components/ngDraggable/ngDraggable.js',
+		'app/js/bower_components/angular-timeago/src/timeAgo.js'
 	],
 	jQuery: [
 		'app/js/bower_components/jquery/dist/jquery.js',
