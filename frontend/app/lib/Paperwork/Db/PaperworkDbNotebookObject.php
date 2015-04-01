@@ -23,7 +23,9 @@ class PaperworkDbNotebookObject extends PaperworkDbObject {
 		))->join('notebook_user', function($join) use(&$userId) {
 				$join->on('notebook_user.notebook_id', '=', 'notebooks.id')
 					->where('notebook_user.user_id', '=', $userId);
-		})->select($defaultNotebooksSelect);
+		})->leftJoin('notes', function($join) {
+			$join->on('notes.notebook_id', '=', 'notebooks.id');
+		})->groupBy('notebooks.id')->select($defaultNotebooksSelect)->addSelect(\DB::raw('COUNT(`notes`.`id`) as notes_count'));
 
 		$idCount = count($id);
 		if($idCount > 0) {
@@ -35,7 +37,7 @@ class PaperworkDbNotebookObject extends PaperworkDbObject {
 			}
 		}
 
-		$data->whereNull('deleted_at');
+		$data->whereNull('notebooks.deleted_at');
 
 		return $data->get();
 	}
