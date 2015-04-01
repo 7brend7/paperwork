@@ -1,36 +1,33 @@
 angular.module('paperworkNotes').controller('NotesShowController',
-  function ($scope, $rootScope, $location, $routeParams, NotesService, NetService) {
-    if ($routeParams.noteId === "undefined") {
-      return;
-    }
-    $rootScope.notebookSelectedId = ($routeParams.notebookId);
-    $rootScope.noteSelectedId = {'notebookId': ($routeParams.notebookId), 'noteId': ($routeParams.noteId)};
-    $rootScope.versionSelectedId = {
-      'notebookId': ($routeParams.notebookId),
-      'noteId': ($routeParams.noteId),
-      'versionId': paperworkDbAllId
-    };
+   function($scope, $rootScope, $location, $routeParams, NotesService, paperworkDbAllId) {
+     if($routeParams.noteId === "undefined") {
+       return;
+     }
 
-    if (typeof $routeParams.searchQuery == "undefined" || $routeParams.searchQuery == null || $routeParams.searchQuery.length <= 0) {
+     $rootScope.notebookSelectedId = ($routeParams.notebookId);
+     $rootScope.noteSelectedId = {'notebookId': ($routeParams.notebookId), 'noteId': ($routeParams.noteId)};
+     $rootScope.versionSelectedId = {'notebookId': ($routeParams.notebookId), 'noteId': ($routeParams.noteId), 'versionId': paperworkDbAllId};
+
+    if(typeof $routeParams.searchQuery == "undefined" || $routeParams.searchQuery == null || $routeParams.searchQuery.length <= 0) {
       NotesService.getNotesInNotebook($rootScope.getNotebookSelectedId());
     }
 
     NotesService.getNoteById(($routeParams.noteId));
 
     NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
-      function (response) {
+      function(response) {
         $rootScope.fileList = response;
       });
 
     $('body').popover({
-      selector: '#note-info',
+      selector:  '#note-info',
       container: 'body',
-      viewport: {
+      viewport:  {
         selector: '#paperworkView',
-        padding: 16
+        padding:  16
       },
-      trigger: 'click',
-      html: true
+      trigger:   'click',
+      html:      true
     });
 
     if (matchMedia('(max-width: 991px)').matches && $('.owl-carousel').data('owlCarousel')) {
