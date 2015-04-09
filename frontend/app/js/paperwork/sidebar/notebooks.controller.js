@@ -241,7 +241,7 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
       return $.inArray(shortDate, $scope.sidebarCalendarEnabledDates) == -1;
     };
 
-    $scope.sidebarCalendar = function(data) {
+    $scope.sidebarCalendarCallback = function(data) {
       while($scope.sidebarCalendarEnabledDates.length) {
         $scope.sidebarCalendarEnabledDates.pop();
       }
@@ -263,7 +263,7 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
       $('.sidebar .toggle-calendar-btn').toggleClass('fa-caret-down fa-caret-up');
     };
 
-    NotebooksService.getCalendar($scope.sidebarCalendar);
+    NotebooksService.getCalendar($scope.sidebarCalendarCallback);
     NotebooksService.getNotebookShortcuts(null);
     NotebooksService.getNotebooks();
     NotebooksService.getTags();

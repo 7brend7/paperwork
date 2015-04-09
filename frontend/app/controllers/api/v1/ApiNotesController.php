@@ -304,11 +304,11 @@ class ApiNotesController extends BaseController
                 array());
         }
 
-        // return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $notes->first());
-		$note = $notes->first();
-		$note->versions = $this->getNoteVersionsBrief($note->id);
-		return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $note);
-	}
+        $note = $notes->first();
+        $note->versions = $this->getNoteVersionsBrief($note->id);
+        return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $note);
+
+    }
 
     public function store($notebookId)
     {
