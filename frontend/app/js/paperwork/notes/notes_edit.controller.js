@@ -157,7 +157,6 @@ angular.module('paperworkNotes').controller('NotesEditController',
 
     // TODO: Move to directive
     $('#attachmentsBtn').click(function() {
-      debugger;
       var that = this;
       var $opts = {method: 'GET', url: 'templates/file-uploader'};
       $http($opts).
