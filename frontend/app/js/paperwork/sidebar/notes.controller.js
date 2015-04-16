@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('SidebarNotesController',
-  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, StatusNotifications) {
+  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, StatusNotifications, paperworkDbAllId) {
     $scope.isVisible = function() {
       return !$rootScope.expandedNoteLayout;
     };
@@ -27,11 +27,22 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
     };
 
     $scope.newNote = function(notebookId) {
-      if($rootScope.menuItemNotebookClass() === 'disabled') {
+      /*if($rootScope.menuItemNotebookClass() === 'disabled') {
         return false;
-      }
-      if(typeof notebookId == "undefined" || notebookId == 0) {
-        // TODO: Show some error
+      }*/
+      if(typeof notebookId == "undefined" || notebookId == paperworkDbAllId) {
+        $rootScope.modalMessageBox = {
+          'title': 'Error',
+          'content': 'Please select notebook first',
+          'buttons': [
+            {
+              'label': $rootScope.i18n.keywords.close,
+              'isDismiss': true
+            }
+          ]
+        };
+        $('#modalMessageBox').modal('show');
+        return false;
       }
 
       var data = {
@@ -80,7 +91,7 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       }
     };
 
-    $scope.updateNote = function() {
+    $rootScope.updateNote = function() {
       // if(typeof $rootScope.templateNoteEdit == "undefined" || $rootScope.templateNoteEdit == null) {
       //   $rootScope.templateNoteEdit = {};
       // }
@@ -101,6 +112,9 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
               $rootScope.templateNoteEdit.modified = false;
               // Temporary until related issue is closed
               StatusNotifications.sendStatusFeedback("success", "note_saved_successfully");
+
+              $rootScope.editNoteMode = false;
+              $location.path("/n/" + $rootScope.notebookSelectedId + "/" + $rootScope.note.id);
               break;
             case 400:
               $rootScope.errors = data.errors;
@@ -256,4 +270,11 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       $rootScope.noteSelectedId.noteId = noteId;
 	  $location.path("/n/" + (notebookId)+"/"+(noteId));
      };
+
+    $scope.sortNotes = function(item, reverse) {
+      $rootScope.notesOrderProp = item;
+      $rootScope.notesOrderPropReverse = reverse;
+    };
+
+    $rootScope.editNoteMode = false;
   });
