@@ -65,7 +65,7 @@ class ApiVersionsController extends BaseController {
 		}
 
 		while(!is_null($currentVersion)) {
- 			if($currentVersion->id == $versionId || $versionId == '0') {
+ 			if($currentVersion->id == $versionId || '0') {
 				return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $currentVersion);
 			}
 			$currentVersion = $currentVersion->previous()->first();

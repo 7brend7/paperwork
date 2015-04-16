@@ -37,7 +37,12 @@ class ApiNotebooksController extends BaseController {
 		// }
 
 		$notebooks = PaperworkDb::notebook()->get()->toArray();
-		array_unshift($notebooks, array('id' => PaperworkDb::DB_ALL_ID, 'type' => '2', 'title' => Lang::get('notebooks.all_notes')));
+		array_unshift($notebooks, [
+			'id' => PaperworkDb::DB_ALL_ID,
+			'type' => '2',
+			'title' => Lang::get('notebooks.all_notes'),
+			'notes_count' => array_sum(array_column($notebooks, 'notes_count'))
+		]);
 		return PaperworkHelpers::apiResponse(PaperworkHelpers::STATUS_SUCCESS, $notebooks);
 	}
 

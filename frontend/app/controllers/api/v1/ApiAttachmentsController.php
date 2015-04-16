@@ -33,7 +33,7 @@ class ApiAttachmentsController extends BaseController {
 		}
 
 		while(!is_null($tmp)) {
-			if($tmp->id == $versionId || $versionId == 0) {
+			if($tmp->id == $versionId || $versionId == '0') {
 				$version = $tmp;
 				break;
 			}
@@ -69,7 +69,7 @@ class ApiAttachmentsController extends BaseController {
 		}
 
 		while(!is_null($tmp)) {
-			if($tmp->id == $versionId || $versionId == 0) {
+			if($tmp->id == $versionId || $versionId == '0') {
 				$version = $tmp;
 				break;
 			}
@@ -148,7 +148,7 @@ class ApiAttachmentsController extends BaseController {
 			}
 
 			while(!is_null($tmp)) {
-				if($tmp->id == $versionId || $versionId == 0) {
+				if($tmp->id == $versionId || $versionId == '0') {
 					$version = $tmp;
 					break;
 				}
@@ -210,7 +210,7 @@ class ApiAttachmentsController extends BaseController {
 		}
 
 		while(!is_null($tmp)) {
-			if($tmp->id == $versionId || $versionId == 0) {
+			if($tmp->id == $versionId || $versionId == '0') {
 				$version = $tmp;
 				break;
 			}
@@ -256,7 +256,7 @@ class ApiAttachmentsController extends BaseController {
 		}
 
 		while(!is_null($tmp)) {
-			if($tmp->id == $versionId || $versionId == 0) {
+			if($tmp->id == $versionId || $versionId == '0') {
 				$version = $tmp;
 				break;
 			}

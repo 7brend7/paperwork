@@ -1,72 +1,72 @@
 angular.module('paperworkNotes').controller('NotesEditController',
-  function($scope, $rootScope, $location, $routeParams, NotesService, paperworkApi, paperworkDbAllId) {
-    window.onCkeditChangeFunction = function() {
+  function ($scope, $rootScope, $location, $routeParams, NotesService, paperworkApi, paperworkDbAllId, $http, $compile) {
+    window.onCkeditChangeFunction = function () {
       // FIXME jQuery un angular is anti-pattern
       // Let's access our $rootScope from within jQuery (this)
       _$scope = $('body').scope();
       _$rootScope = _$scope.$root;
-      _$scope.$apply(function() {
+      _$scope.$apply(function () {
         _$rootScope.templateNoteEdit.modified = true;
       });
     };
 
-    window.hasCkeditChangedFunction = function() {
+    window.hasCkeditChangedFunction = function () {
       // Let's access our $rootScope from within jQuery (this)
       _$scope = $('body').scope();
       _$rootScope = _$scope.$root;
       return _$rootScope.templateNoteEdit.modified;
     };
 
-    var thisController = function(notebookId, noteId, _onChangeFunction) {
+    var thisController = function (notebookId, noteId, _onChangeFunction) {
       $rootScope.noteSelectedId = {'notebookId': notebookId, 'noteId': noteId};
       $rootScope.versionSelectedId = {'notebookId': notebookId, 'noteId': noteId, 'versionId': 0};
       NotesService.getNoteById(noteId);
       $rootScope.templateNoteEdit = $rootScope.getNoteByIdLocal(noteId);
-      if(typeof $rootScope.templateNoteEdit == "undefined" || $rootScope.templateNoteEdit == null) {
+      if (typeof $rootScope.templateNoteEdit == "undefined" || $rootScope.templateNoteEdit == null) {
         $rootScope.templateNoteEdit = {};
       }
 
       NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
-        function(response) {
+        function (response) {
           $rootScope.fileList = response;
         });
 
-      if(typeof $rootScope.templateNoteEdit.tags != "undefined" && $rootScope.templateNoteEdit.tags.length > 0) {
-        for(var i = 0; i < $rootScope.templateNoteEdit.tags.length; i++) {
+      if (typeof $rootScope.templateNoteEdit.tags != "undefined" && $rootScope.templateNoteEdit.tags.length > 0) {
+        for (var i = 0; i < $rootScope.templateNoteEdit.tags.length; i++) {
           $('input#tags').tagsinput('add', $rootScope.templateNoteEdit.tags[i].title);
         }
       }
 
-      $('input#tags').on('beforeItemAdd', function(ev) {
+      $('input#tags').on('beforeItemAdd', function (ev) {
         // console.log(ev.item);
         // ev.item = ev.item.replace('+', '');
         window.onCkeditChangeFunction();
-      }).on('itemRemoved', function() {
+      }).on('itemRemoved', function () {
         window.onCkeditChangeFunction();
       });
 
       var ck = CKEDITOR.replace('content', {
-        fullPage:               false,
+        fullPage: false,
         // extraPlugins: 'myplugin,anotherplugin',
         // removePlugins: 'sourcearea,save,newpage,preview,print,forms',
-        toolbarCanCollapse:     true,
+        toolbarCanCollapse: true,
         toolbarStartupExpanded: true,
-        tabSpaces:              4,
-        skin:                   'bootstrapck',
-        height:                 '400px',
+        tabSpaces: 4,
+        skin: 'bootstrapck',
+        height: '400px',
 
-        autosave_saveOnDestroy:          true,
+        autosave_saveOnDestroy: true,
         autosave_saveDetectionSelectors: "[id*='updateNote']"
       });
 
       ck.on('change', _onChangeFunction);
 
       /*window.onbeforeunloadInfo = $rootScope.i18n.messages.onbeforeunload_info;
-      window.onbeforeunload = function() {
-        if(window.hasCkeditChangedFunction()) {
-          return window.onbeforeunloadInfo;
-        }
-      };*/
+       window.onbeforeunload = function() {
+       if(window.hasCkeditChangedFunction()) {
+       return window.onbeforeunloadInfo;
+       }
+       };*/
     };
 
     var loadedTags = $rootScope.tags;
@@ -74,27 +74,27 @@ angular.module('paperworkNotes').controller('NotesEditController',
     var userTags = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      local:          loadedTags
+      local: loadedTags
     });
 
     userTags.initialize();
 
     $('input#tags').tagsinput({
       allowDuplicates: false,
-      trimValue:       true,
-      freeInput:       true,
-      tagClass:        function(item) {
-        if(item[0] == '+') {
+      trimValue: true,
+      freeInput: true,
+      tagClass: function (item) {
+        if (item[0] == '+') {
           return "note-tags-item input-tag-public";
         } else {
           return "note-tags-item input-tag-private";
         }
       },
-      typeaheadjs:     {
-        name:       'tags',
+      typeaheadjs: {
+        name: 'tags',
         displayKey: 'title',
-        valueKey:   'title',
-        source:     userTags.ttAdapter()
+        valueKey: 'title',
+        source: userTags.ttAdapter()
       }
     });
     // This doesn't seem to be working. I might be patching the tagsinput plugin someday to get this working cleanly.
@@ -104,8 +104,8 @@ angular.module('paperworkNotes').controller('NotesEditController',
     //   $(this).trigger(e);
     // });
 
-    $scope.$on('deleteAttachmentLink', function(ev, args) {
-      if(typeof args == "undefined" || typeof args.url == "undefined") {
+    $scope.$on('deleteAttachmentLink', function (ev, args) {
+      if (typeof args == "undefined" || typeof args.url == "undefined") {
         return false;
       }
 
@@ -113,22 +113,22 @@ angular.module('paperworkNotes').controller('NotesEditController',
         elementCollection = documentNode.getElementsByTagName('a');
 
       var i = elementCollection.length;
-      while(i--) {
+      while (i--) {
         var element = elementCollection[i];
-        if(element.getAttribute("href") == args.url) {
+        if (element.getAttribute("href") == args.url) {
           element.parentNode.removeChild(element);
         }
       }
     });
 
-    $scope.$on('insertAttachmentLink', function(ev, args) {
-      if(typeof args == "undefined" || typeof args.url == "undefined" || typeof args.mimetype == "undefined") {
+    $scope.$on('insertAttachmentLink', function (ev, args) {
+      if (typeof args == "undefined" || typeof args.url == "undefined" || typeof args.mimetype == "undefined") {
         return false;
       }
 
       var insertHtml = "";
 
-      switch(args.mimetype.match(/^[a-z]+\/*/g)[0]) {
+      switch (args.mimetype.match(/^[a-z]+\/*/g)[0]) {
         case "image/":
           insertHtml = '<a href="' + args.url + '" title="' + args.filename + '" target="_blank">' + '<img src="' + args.url + '" alt="' + args.filename + '">' + '</a>';
           break;
@@ -139,21 +139,42 @@ angular.module('paperworkNotes').controller('NotesEditController',
       CKEDITOR.instances.content.insertHtml(insertHtml);
     });
 
-      $rootScope.uploadUrl = paperworkApi + '/notebooks/' + ($routeParams.notebookId) + '/notes/' + parseInt($routeParams.noteId) + '/versions/' + paperworkDbAllId + '/attachments';
+    $rootScope.uploadUrl = paperworkApi + '/notebooks/' + ($routeParams.notebookId) + '/notes/' + $routeParams.noteId + '/versions/' + paperworkDbAllId + '/attachments';
 
-      if(typeof $rootScope.notes == "undefined") {
-        NotesService.getNotesInNotebook($rootScope.notebookSelectedId, (function(_notebookId, _noteId) {
-          return function() {
-            thisController(_notebookId, _noteId, function() {
-              window.onCkeditChangeFunction();
-            });
-          }
-        })(($routeParams.notebookId), ($routeParams.noteId)));
-      } else {
-        thisController(($routeParams.notebookId), ($routeParams.noteId), function() {
-          window.onCkeditChangeFunction();
+    if (typeof $rootScope.notes == "undefined") {
+      NotesService.getNotesInNotebook($rootScope.notebookSelectedId, (function (_notebookId, _noteId) {
+        return function () {
+          thisController(_notebookId, _noteId, function () {
+            window.onCkeditChangeFunction();
+          });
+        }
+      })(($routeParams.notebookId), ($routeParams.noteId)));
+    } else {
+      thisController(($routeParams.notebookId), ($routeParams.noteId), function () {
+        window.onCkeditChangeFunction();
+      });
+    }
+
+    // TODO: Move to directive
+    $('#attachmentsBtn').click(function() {
+      debugger;
+      var that = this;
+      var $opts = {method: 'GET', url: 'templates/file-uploader'};
+      $http($opts).
+        success(function (data, status, headers, config) {
+          $(that).popover({
+            trigger: 'manual',
+            title: 'Attachments',
+            placement: 'bottom',
+            html: true,
+            content: data
+          }).popover('show');
+          var $templateScope = $scope.$new();
+          $compile($(that).parent()[0])($templateScope);
+        }).
+        error(function (data, status, headers, config) {
         });
-      }
+    });
 
     $rootScope.navbarMainMenu = false;
     $rootScope.navbarSearchForm = false;
