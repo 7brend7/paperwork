@@ -16,9 +16,9 @@ angular.module('paperworkNotes').controller('WaybackController',
           }
         });
 
-      NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, itemId, function(response) {
+      /*NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, itemId, function(response) {
         $rootScope.fileList = response;
-      });
+      });*/
 
     });
   });

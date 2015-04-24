@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('SidebarNotesController',
-  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, StatusNotifications, paperworkDbAllId) {
+  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, StatusNotifications, paperworkDbAllId, $http, $compile) {
     $scope.isVisible = function() {
       return !$rootScope.expandedNoteLayout;
     };
@@ -270,6 +270,36 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       $rootScope.notesOrderProp = item;
       $rootScope.notesOrderPropReverse = reverse;
     };
+
+    // TODO: Move to directive
+    $('body').off('click').on('click', function() {
+      if($('#attachmentsBtn').data('bs.popover')) {
+        $('#attachmentsBtn').popover('hide');
+      }
+    });
+    $('#attachmentsBtn').off('click').on('click', function() {
+      if($(this).data('bs.popover')) {
+        $(this).popover('show');
+        return false;
+      }
+      var that = this;
+      var $opts = {method: 'GET', url: 'templates/file-uploader'};
+      $http($opts).
+          success(function (data, status, headers, config) {
+            $(that).popover({
+              trigger: 'manual',
+              title: 'Attachments',
+              placement: 'bottom',
+              html: true,
+              content: data
+            }).popover('show');
+            var $templateScope = $scope.$new();
+            $compile($(that).parent()[0])($templateScope);
+          }).
+          error(function (data, status, headers, config) {
+          });
+      return false;
+    });
 
     $rootScope.editNoteMode = false;
   });

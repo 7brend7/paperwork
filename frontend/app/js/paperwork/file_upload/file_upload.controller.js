@@ -11,6 +11,16 @@ angular.module('paperworkNotes').controller('FileUploadController',
       }
     });
 
+    $scope.loadFiles = function(callback) {
+      NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId,
+          $rootScope.getVersionSelectedId(true).versionId, function(response) {
+            $rootScope.fileList = response;
+            if(typeof callback == 'function') {
+              callback();
+            }
+      });
+    };
+
     uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
       // console.info('onWhenAddingFileFailed', item, filter, options);
     };
@@ -44,11 +54,10 @@ angular.module('paperworkNotes').controller('FileUploadController',
     };
     uploader.onCompleteAll = function() {
       // console.info('onCompleteAll');
-      NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId,
-        $rootScope.getVersionSelectedId(true).versionId, function(response) {
-          $rootScope.fileList = response;
-          uploader.clearQueue();
-        });
+      $scope.loadFiles(function() {
+        uploader.clearQueue();
+      });
+
       StatusNotifications.sendStatusFeedback("success", "file_uploaded_sucessfully");
     };
 
@@ -124,4 +133,6 @@ angular.module('paperworkNotes').controller('FileUploadController',
           return 'fa-file-o';
       }
     };
+
+    $scope.loadFiles();
   });

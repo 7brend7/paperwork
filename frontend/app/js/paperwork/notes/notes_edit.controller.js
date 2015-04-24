@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('NotesEditController',
-  function ($scope, $rootScope, $location, $routeParams, NotesService, paperworkApi, paperworkDbAllId, $http, $compile) {
+  function ($scope, $rootScope, $location, $routeParams, NotesService, paperworkApi, paperworkDbAllId) {
     window.onCkeditChangeFunction = function () {
       // FIXME jQuery un angular is anti-pattern
       // Let's access our $rootScope from within jQuery (this)
@@ -26,10 +26,10 @@ angular.module('paperworkNotes').controller('NotesEditController',
         $rootScope.templateNoteEdit = {};
       }
 
-      NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
+      /*NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
         function (response) {
           $rootScope.fileList = response;
-        });
+        });*/
 
       if (typeof $rootScope.templateNoteEdit.tags != "undefined" && $rootScope.templateNoteEdit.tags.length > 0) {
         for (var i = 0; i < $rootScope.templateNoteEdit.tags.length; i++) {
@@ -154,26 +154,6 @@ angular.module('paperworkNotes').controller('NotesEditController',
         window.onCkeditChangeFunction();
       });
     }
-
-    // TODO: Move to directive
-    $('#attachmentsBtn').click(function() {
-      var that = this;
-      var $opts = {method: 'GET', url: 'templates/file-uploader'};
-      $http($opts).
-        success(function (data, status, headers, config) {
-          $(that).popover({
-            trigger: 'manual',
-            title: 'Attachments',
-            placement: 'bottom',
-            html: true,
-            content: data
-          }).popover('show');
-          var $templateScope = $scope.$new();
-          $compile($(that).parent()[0])($templateScope);
-        }).
-        error(function (data, status, headers, config) {
-        });
-    });
 
     $rootScope.navbarMainMenu = false;
     $rootScope.navbarSearchForm = false;

@@ -14,10 +14,10 @@ angular.module('paperworkNotes').controller('NotesShowController',
 
     NotesService.getNoteById(($routeParams.noteId));
 
-    NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
+    /*NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
       function(response) {
         $rootScope.fileList = response;
-      });
+      });*/
 
     $('body').popover({
       selector:  '#note-info',

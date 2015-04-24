@@ -130,6 +130,8 @@ return array(
 		'Jenssegers\Agent\AgentServiceProvider',
 		'SimpleSoftwareIO\QrCode\QrCodeServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+
+		'Igormatkovic\Memcache\MemcacheServiceProvider',
 	),
 
 	/*
