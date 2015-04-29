@@ -133,6 +133,4 @@ angular.module('paperworkNotes').controller('FileUploadController',
           return 'fa-file-o';
       }
     };
-
-    $scope.loadFiles();
   });

@@ -13,12 +13,36 @@
     </div>
 
     <ul class="list-unstyled notebook-controls" ng-controller="SidebarNotesController">
-        <li><button type="button" id="attachmentsBtn" data-placement="bottom" title="Attachments"><i class="fa fa-files-o"></i></button></li>
-        <li><button data-toggle="freqselector" data-target="#wayback-machine" type="button" data-placement="bottom" title="[[Lang::get('keywords.note_history')]]"><i class="fa fa-history"></i></button></li>
-        <li ng-hide="editNoteMode"><button ng-click="editNote(note.notebook_id, note.id)" type="button" data-placement="bottom" title="[[Lang::get('keywords.edit_note')]]"><i class="fa fa-pencil"></i></button></li>
-        <li ng-show="editNoteMode" class="ng-hide"><button ng-click="updateNote()" type="button" data-placement="bottom" title="[[Lang::get('keywords.save')]]"><i class="fa fa-floppy-o"></i></button></li>
-        [[--<li><button type="button" data-placement="bottom" title="Share"><i class="fa fa-share-alt"></i></button></li>--]]
-        <li><button ng-click="modalDeleteNote(getNotebookSelectedId(), (getNoteSelectedId(true)).noteId)" type="button" data-placement="bottom" title="[[Lang::get('keywords.delete_note')]]"><i class="fa fa-trash-o"></i></button></li>
+        <li>
+            <button type="button" id="attachmentsBtn" data-placement="bottom" title="Attachments">
+                <i class="fa fa-files-o"></i>
+            </button>
+        </li>
+        <li>
+            <button data-toggle="freqselector" data-target="#wayback-machine" type="button" data-placement="bottom" title="[[Lang::get('keywords.note_history')]]">
+                <i class="fa fa-history"></i>
+            </button>
+        </li>
+        <li ng-hide="editNoteMode">
+            <button ng-click="editNote(note.notebook_id, note.id)" type="button" data-placement="bottom" title="[[Lang::get('keywords.edit_note')]]">
+                <i class="fa fa-pencil"></i>
+            </button>
+        </li>
+        <li ng-show="editNoteMode" class="ng-hide">
+            <button ng-click="updateNote()" type="button" data-placement="bottom" title="[[Lang::get('keywords.save')]]">
+                <i class="fa fa-floppy-o"></i>
+            </button>
+        </li>
+        [[--
+        <li>
+            <button type="button" data-placement="bottom" title="Share"><i class="fa fa-share-alt"></i></button>
+        </li>
+        --]]
+        <li>
+            <button ng-click="modalDeleteNote(getNotebookSelectedId(), (getNoteSelectedId(true)).noteId)" type="button" data-placement="bottom" title="[[Lang::get('keywords.delete_note')]]">
+                <i class="fa fa-trash-o"></i>
+            </button>
+        </li>
     </ul>
 
 </div>

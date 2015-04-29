@@ -431,6 +431,32 @@ body {
                 .tooltip-inner {
                     background-color: #89939a;
                 }
+
+                .file-uploader {
+
+                    .file-upload-dropzone {
+                        background-color: @gray-lighter;
+                        border: 1px dashed @gray-light;
+                        border-radius: 9px;
+                        font-size: 1.1em;
+
+                        height: 42px;
+                        line-height: 42px;
+                        text-align: center;
+
+                        cursor: pointer;
+                    }
+
+                    .file-upload-dropzone-active {
+                        border: 1px solid @brand-primary;
+                    }
+
+                    .file-upload-input-hidden {
+                        display: block;
+                        visibility: hidden;
+                        height: 0;
+                    }
+                }
             }
         }
 

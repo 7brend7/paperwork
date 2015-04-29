@@ -273,14 +273,14 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
     };
 
     // TODO: Move to directive
-    $('body').off('click').on('click', function() {
-      if($('#attachmentsBtn').data('bs.popover')) {
-        $('#attachmentsBtn').popover('hide');
+    $('body').off('click').on('click', function(e) {
+      if($('#attachmentsBtn').data('bs.popover') && $(e.target).closest('.popover').length == 0) {
+        $('.single-note-header .notebook-controls .popover').hide();
       }
     });
     $('#attachmentsBtn').off('click').on('click', function() {
       if($(this).data('bs.popover')) {
-        $(this).popover('show');
+        $('.single-note-header .notebook-controls .popover').show();
         return false;
       }
       var that = this;
