@@ -28,10 +28,10 @@ angular.module('paperworkNotes').controller('NotesEditController',
         $rootScope.templateNoteEdit = {};
       }
 
-      NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
+      /*NotesService.getNoteVersionAttachments($rootScope.getNotebookSelectedId(), ($rootScope.getNoteSelectedId(true)).noteId, $rootScope.getVersionSelectedId(true).versionId,
         function(response) {
           $rootScope.fileList = response;
-        });
+        });*/
 
       if(typeof $rootScope.templateNoteEdit.tags != "undefined" && $rootScope.templateNoteEdit.tags.length > 0) {
         for(var i = 0; i < $rootScope.templateNoteEdit.tags.length; i++) {
@@ -52,7 +52,7 @@ angular.module('paperworkNotes').controller('NotesEditController',
         // extraPlugins: 'myplugin,anotherplugin',
         // removePlugins: 'sourcearea,save,newpage,preview,print,forms',
         toolbarCanCollapse:     true,
-        toolbarStartupExpanded: false,
+        toolbarStartupExpanded: true,
         tabSpaces:              4,
         skin:                   'bootstrapck',
         height:                 '400px',
@@ -63,12 +63,12 @@ angular.module('paperworkNotes').controller('NotesEditController',
 
       ck.on('change', _onChangeFunction);
 
-      window.onbeforeunloadInfo = $rootScope.i18n.messages.onbeforeunload_info;
+      /*window.onbeforeunloadInfo = $rootScope.i18n.messages.onbeforeunload_info;
       window.onbeforeunload = function() {
         if(window.hasCkeditChangedFunction()) {
           return window.onbeforeunloadInfo;
         }
-      };
+      };*/
     };
 
     var loadedTags = $rootScope.tags;
@@ -87,9 +87,9 @@ angular.module('paperworkNotes').controller('NotesEditController',
       freeInput:       true,
       tagClass:        function(item) {
         if(item[0] == '+') {
-          return "input-tag-public";
+          return "note-tags-item input-tag-public";
         } else {
-          return "input-tag-private";
+          return "note-tags-item input-tag-private";
         }
       },
       typeaheadjs:     {
@@ -141,7 +141,7 @@ angular.module('paperworkNotes').controller('NotesEditController',
       CKEDITOR.instances.content.insertHtml(insertHtml);
     });
 
-      $rootScope.uploadUrl = paperworkApi + '/notebooks/' + ($routeParams.notebookId) + '/notes/' + parseInt($routeParams.noteId) + '/versions/' + paperworkDbAllId + '/attachments';
+      $rootScope.uploadUrl = paperworkApi + '/notebooks/' + $routeParams.notebookId + '/notes/' + $routeParams.noteId + '/versions/' + paperworkDbAllId + '/attachments';
 
       if(typeof $rootScope.notes == "undefined") {
         NotesService.getNotesInNotebook($rootScope.notebookSelectedId, (function(_notebookId, _noteId) {
@@ -160,4 +160,5 @@ angular.module('paperworkNotes').controller('NotesEditController',
     $rootScope.navbarMainMenu = false;
     $rootScope.navbarSearchForm = false;
     $rootScope.expandedNoteLayout = true;
+    $rootScope.editNoteMode = true;
   });
