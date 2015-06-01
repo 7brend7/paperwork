@@ -1,8 +1,8 @@
 <?php
 
-class Tag extends Eloquent {
+class Tag extends PaperworkModel {
 	protected $table = 'tags';
-	protected $fillable = ['title'];
+	protected $fillable = array('visibility', 'title');
 
 	public function notes()
 	{
@@ -11,7 +11,7 @@ class Tag extends Eloquent {
 
 	public function users()
 	{
-	  return $this->belongsToMany('User', 'tag_user')->withTimestamps();
+	  return $this->belongsTo('User');
 	}
 }
 

@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('SidebarNotesController',
-  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable) {
+  function($scope, $rootScope, $location, $timeout, $routeParams, NotebooksService, NotesService, ngDraggable, StatusNotifications, NetService) {
     $scope.isVisible = function() {
       return !$rootScope.expandedNoteLayout;
     };
@@ -25,36 +25,61 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       }
       return null;
     };
-
+    
+    $scope.getUsers = function (noteId){
+        if(typeof $rootScope.i18n != "undefined")
+	    $rootScope.umasks=[{'name':$rootScope.i18n.keywords.not_shared, 'value':0},
+		   {'name':$rootScope.i18n.keywords.read_only, 'value':4},
+		   {'name':$rootScope.i18n.keywords.read_write, 'value':6}];
+	NetService.apiGet('/users/'+noteId, function(status, data) {
+        if(status == 200) {
+          $rootScope.users = data.response;
+        }
+      });
+    };
     $scope.newNote = function(notebookId) {
       if($rootScope.menuItemNotebookClass() === 'disabled') {
         return false;
       }
-      if(typeof notebookId == "undefined" || notebookId == 0) {
-        // TODO: Show some error
-      }
-
+      
       var data = {
         'title':           $rootScope.i18n.keywords.untitled || 'Untitled',
         'content':         '',
         'content_preview': ''
       };
-
+      
       var callback = (function(_notebookId) {
         return function(status, data) {
+          console.log(status);
           switch(status) {
             case 200:
               $rootScope.templateNoteEdit = {};
               $location.path("/n/" + _notebookId + "/" + data.response.id + "/edit");
+              StatusNotifications.sendStatusFeedback("success", "note_created_successfully");
               break;
             case 400:
-              // TODO: Show some kind of error
+              StatusNotifications.sendStatusFeedback("error", "note_create_fail");
+              break;
+            default:
+              StatusNotifications.sendStatusFeedback("error", "note_create_fail");
               break;
           }
         };
       })(notebookId);
-
-      NotesService.createNote(notebookId, data, callback);
+      
+      if(typeof notebookId == "undefined" || notebookId == 0 || notebookId === "00000000-0000-0000-0000-000000000000") {
+        //Open Select Notebook dialog to choose destination of new note 
+        $rootScope.modalNotebookSelect({ 
+            'notebookId': notebookId,
+            'noteId': 0,
+            'theCallback': function(notebookId, noteId, toNotebookId) {
+                $('#modalNotebookSelect').modal('hide');
+                NotesService.createNote(toNotebookId, data, callback);
+            }
+        });
+      }else{
+        NotesService.createNote(notebookId, data, callback);
+      }
     };
 
     $scope.editNote = function(notebookId, noteId) {
@@ -81,11 +106,11 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
       //   $rootScope.templateNoteEdit = {};
       // }
 
-      $rootScope.templateNoteEdit.content = CKEDITOR.instances.content.getData();
+      $rootScope.templateNoteEdit.version.content = CKEDITOR.instances.content.getData();
 
       var data = {
-        'title':   $rootScope.templateNoteEdit.title,
-        'content': $rootScope.templateNoteEdit.content,
+        'title':   $rootScope.templateNoteEdit.version.title,
+        'content': $rootScope.templateNoteEdit.version.content,
         'tags':    $('input#tags').tagsinput('items')
       };
 
@@ -95,7 +120,9 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
             case 200:
               $rootScope.errors = {};
               $rootScope.templateNoteEdit.modified = false;
-              // TODO: Show cool success message
+              CKEDITOR.instances.content.resetDirty();
+              // Temporary until related issue is closed
+              StatusNotifications.sendStatusFeedback("success", "note_saved_successfully");
               break;
             case 400:
               $rootScope.errors = data.errors;
@@ -111,6 +138,9 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
                   }
                 ]
               });
+              break;
+            default:
+              StatusNotifications.sendStatusFeedback("error", "note_save_failed");
               break;
           }
         };
@@ -225,11 +255,51 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
           }
           NotesService.moveNote(notebookId, noteId, toNotebookId, function(_notebookId, _noteId, _toNotebookId) {
             $('#modalNotebookSelect').modal('hide');
-            $location.path("/n/" + parseInt(_toNotebookId));
+            $location.path("/n/" + (_toNotebookId));
           });
           return true;
         }
       });
+    };
+
+    $scope.modalShareNote = function(notebookId,noteId){
+      if($rootScope.menuItemNoteClass('multiple') === 'disabled') {
+        return false;
+      }
+      $scope.getUsers(noteId);
+      console.log(noteId);
+      $rootScope.modalUsersSelect({
+        'notebookId': notebookId,
+        'noteId': noteId,
+        'theCallback':function(notebookId,noteId,toUsers){
+          if ($rootScope.editMultipleNotes) {
+            noteId=[];
+            console.log($rootScope.notesSelectedIds);
+            angular.forEach($rootScope.notesSelectedIds, function(isChecked, checkedNoteId) {
+              console.log(checkedNoteId);
+              if(isChecked) {
+                noteId.push(checkedNoteId);
+              }
+            });
+          }
+          toUserId=[]
+          toUMASK=[]
+          angular.forEach(toUsers, function(user,key){
+              toUserId.push(user['id']);
+              toUMASK.push(user['umask']);
+            });
+          NotesService.shareNote(notebookId,noteId,toUserId, toUMASK, function(_notebookId,_noteId){
+            $('#modalUsersSelect').modal('hide');
+            $location.path("/n/"+(_notebookId));
+          });
+          return true;
+        }
+      });
+      
+    };
+    $scope.modalUsersSelectSubmit = function(notebookId, noteId, toUserId) {
+      console.log(toUserId);
+      $rootScope.modalMessageBox.theCallback(notebookId, noteId, toUserId);
     };
 
     $scope.submitSearch = function() {
@@ -242,6 +312,20 @@ angular.module('paperworkNotes').controller('SidebarNotesController',
 
     $scope.onDragSuccess = function(data, event) {
       //u
+    };
+
+    $scope.openShare = function(){
+      $rootScope.messageBox({
+          'title': $rootScope.i18n.keywords.coming_soon,
+          'content': $rootScope.i18n.keywords.not_implemented,
+          'buttons': [
+            {
+              'class': 'btn-primary',
+              'label': $rootScope.i18n.keywords.close,
+              'isDismiss': true
+            }
+          ]
+      });
     };
 
   });

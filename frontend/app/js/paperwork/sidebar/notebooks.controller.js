@@ -1,8 +1,8 @@
 angular.module('paperworkNotes').controller('SidebarNotebooksController',
-  function($scope, $rootScope, $location, $routeParams, $filter, $q, NotebooksService, NotesService, ngDraggable) {
-    $rootScope.notebookSelectedId = 0;
-    $rootScope.tagsSelectedId = -1;
-    $rootScope.dateSelected = -1;
+   function($scope, $rootScope, $location, $routeParams, $filter, $q, NotebooksService, NotesService, paperworkDbAllId, StatusNotifications) {
+     $rootScope.notebookSelectedId = paperworkDbAllId;
+     $rootScope.tagsSelectedId = -1;
+     $rootScope.dateSelected = -1;
 
     $scope.isVisible = function() {
       return !$rootScope.expandedNoteLayout;
@@ -32,25 +32,27 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
           $treeHeaderNotebooks.click();
         }
 
-        $rootScope.notebookSelectedId = parseInt(index);
-        $rootScope.dateSelected = -1;
-        $rootScope.tagsSelectedId = -1;
-        $rootScope.search = "";
-        $location.path("/n/" + parseInt(notebookId));
-      }
-    };
+         $rootScope.notebookSelectedId = parseInt(index);
+         $rootScope.dateSelected = -1;
+         $rootScope.tagsSelectedId = -1;
+         $rootScope.search = "";
+         $location.path("/n/" + (notebookId));
+       }
+     };
 
     $scope.openFilter = function() {
-      var s = "", i = 0;
+      var s = "";
       if($rootScope.notebookSelectedId != 0) {
-        s += "notebookid:" + parseInt($rootScope.notebookSelectedId) + " ";
+        s += "notebookid:" + $rootScope.notebookSelectedId;
       }
 
       if($rootScope.tagsSelectedId != -1) {
-        s += "tagid:" + parseInt($rootScope.tagsSelectedId) + " ";
+        if (s.length > 0) s += " ";
+        s += "tagid:" + $rootScope.tagsSelectedId;
       }
 
       if($rootScope.dateSelected != -1) {
+        if (s.length > 0) s += " ";
         s += "date:" + $filter('date')($rootScope.dateSelected, 'yyyy-MM-dd');
       }
 
@@ -58,16 +60,19 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
       if(s.length) {
         $location.path("/s/" + $rootScope.search);
       } else {
-        $location.path("/n/0");
+        $location.path("/n/" + paperworkDbAllId);
       }
     };
 
     $rootScope.openTag = function(tagId) {
-      if($rootScope.tagsSelectedId === parseInt(tagId)) {
+      if($rootScope.tagsSelectedId === tagId) {
         $rootScope.tagsSelectedId = -1;
       } else {
-        $rootScope.tagsSelectedId = parseInt(tagId);
+        $rootScope.tagsSelectedId = tagId;
       }
+
+      $rootScope.notebookSelectedId = 0;
+      $rootScope.dateSelected = -1;
 
       $scope.openFilter();
     };
@@ -101,18 +106,28 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
 
       var callback = (function(_paperworkNotebooksService) {
         return function(status, data) {
+          var param;
+          var action = $rootScope.modalNotebook.action;
           switch(status) {
             case 200:
               // FIXME
               $('#modalNotebook').modal('hide');
               _paperworkNotebooksService.getNotebooks();
               _paperworkNotebooksService.getNotebookShortcuts(null);
+              param = "notebook_" + action + "_successfully";
+              StatusNotifications.sendStatusFeedback("success", param);
               break;
             case 400:
               if(typeof data.errors.title != "undefined") {
                 // FIXME
                 $('#modalNotebook').find('input[name="title"]').parents('.form-group').addClass('has-warning');
               }
+              //param = "notebook_" + action + "_failed";
+              //StatusNotifications.sendStatusFeedback("error", param);
+              break;
+            default:
+              param = "notebook_" + action + "_failed";
+              StatusNotifications.sendStatusFeedback("error", param);
               break;
           }
         };
@@ -171,10 +186,11 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
             case 200:
               NotebooksService.getNotebookShortcuts(null);
               NotebooksService.getNotebooks();
-              $location.path("/n/0");
+              $location.path("/n/0" + paperworkDbAllId);
+              StatusNotifications.sendStatusFeedback("success", "notebook_deleted_successfully");
               break;
             case 400:
-              // TODO: Show some kind of error
+              StatusNotifications.sendStatusFeedback("error", "notebook_delete_fail");
               break;
           }
         };
@@ -205,7 +221,6 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
 
     $scope.onDropSuccess = function(data, event) {
       NotesService.moveNote($rootScope.note.notebook_id, $rootScope.note.id, this.notebook.id);
-      //console.log("Moved");
       // Try to make the openNotebook dependant on the result of the move
       $scope.openNotebook(this.notebook.id, this.notebook.type, this.notebook.id);
     };
@@ -232,31 +247,24 @@ angular.module('paperworkNotes').controller('SidebarNotebooksController',
         return false;
       }
 
-      var shortDate = $filter('date')(date, "shortDate");
+      var shortDate = $filter('date')(date, "yyyy-MM-dd");
       return $.inArray(shortDate, $scope.sidebarCalendarEnabledDates) == -1;
     };
 
-    $scope.$watchCollection("notes", function(notes) {
-      if(typeof notes === "undefined") {
-        return;
-      }
-
-      var i = $scope.sidebarCalendarEnabledDates.length;
-      while(i--) {
+    $scope.sidebarCalendarCallback = function(data) {
+      while($scope.sidebarCalendarEnabledDates.length) {
         $scope.sidebarCalendarEnabledDates.pop();
       }
 
-      $.each(notes, function(key, note) {
-        var shortDate = $filter('date')(
-          $filter('convertdate')(note.updated_at),
-          "shortDate");
-        $scope.sidebarCalendarEnabledDates.push(shortDate);
+      $.each(data, function(key) {
+        $scope.sidebarCalendarEnabledDates.push(key);
       });
 
       sidebarCalendarDefer.notify(new Date().getTime());
-    });
+    };
 
+    NotebooksService.getCalendar($scope.sidebarCalendarCallback);
     NotebooksService.getNotebookShortcuts(null);
     NotebooksService.getNotebooks();
-    $rootScope.tags = NotebooksService.getTags();
+    NotebooksService.getTags();
   });

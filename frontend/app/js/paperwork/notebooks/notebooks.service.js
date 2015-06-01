@@ -12,6 +12,10 @@ angular.module('paperworkNotes').factory('NotebooksService',
       NetService.apiPut('/notebooks/' + notebookId, data, callback);
     };
 
+    paperworkNotebooksServiceFactory.shareNotebook = function(notebookId, toUserId, toUMASK, callback) {
+      NetService.apiGet('/notebooks/' + notebookId+'/share/'+toUserId+'/'+toUMASK, callback);
+    };
+
     paperworkNotebooksServiceFactory.updateTag = function(tagId, data, callback) {
       NetService.apiPut('/tags/' + tagId, data, callback);
     };
@@ -22,6 +26,14 @@ angular.module('paperworkNotes').factory('NotebooksService',
 
     paperworkNotebooksServiceFactory.deleteTag = function(tagId, callback) {
       NetService.apiDelete('/tags/' + tagId, callback);
+    };
+
+    paperworkNotebooksServiceFactory.getCalendar = function(callback) {
+      NetService.apiGet('/calendar', function(status, data) {
+        if(status == 200) {
+          callback(data.response);
+        }
+      });
     };
 
     paperworkNotebooksServiceFactory.getNotebooks = function() {

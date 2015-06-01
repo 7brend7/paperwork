@@ -1,5 +1,5 @@
 angular.module('paperworkNotes').controller('ConstructorController',
-  function($scope, $rootScope, $location, $routeParams, NetService) {
+  function($scope, $rootScope, $location, $routeParams, NetService, paperworkDbAllId) {
     if($rootScope.initDone) {
       return;
     }
@@ -50,9 +50,13 @@ angular.module('paperworkNotes').controller('ConstructorController',
       $rootScope.$broadcast('paperworkModalHidden', e);
     });
 
-    $modal.on('show.bs.modal', function(e) {
-      $rootScope.$broadcast('paperworkModalVisible', e);
-    });
+     $rootScope.menuItemNotebookClass = function() {
+       if($rootScope.getNotebookSelectedId() != paperworkDbAllId) {
+         return '';
+       } else {
+         return 'disabled';
+       }
+     };
 
     $rootScope.menuItemNotebookClass = function() {
       if($rootScope.getNotebookSelectedId() != 0) {
@@ -105,4 +109,9 @@ angular.module('paperworkNotes').controller('ConstructorController',
     $rootScope.modalNotebookSelect = function(modalData) {
       $rootScope.modalGeneric('modalNotebookSelect', modalData);
     };
+    
+    $rootScope.modalUsersSelect = function(modalData){
+      $rootScope.modalGeneric('modalUsersSelect',modalData);
+    }
+    
   });
